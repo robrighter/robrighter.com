@@ -1,0 +1,3 @@
+[submodule "deps/sprite"]
+	path = deps/sprite
+	url = https://github.com/batiste/sprite.js.git
