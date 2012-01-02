@@ -1,8 +1,22 @@
 /* Author: Rob Righter
 */
 
-$(document).ready(function() {   
-  var scene = sjs.Scene({w:540, h:380, autoPause: false});
+$(document).ready(function() {
+  //////////////////////////////////////
+  var authcallback = function(data){
+      $('.details').html('<p>You are all signed in as <strong>'
+            +data.user.username+
+            '</strong><br>...and here are some details:'
+            +JSON.stringify(data.user)+
+            '</p><a href="/logout">logout</a>').fadeIn('slow');
+    }
+
+    $('#oauthbutt').click(function(){
+      openEasyOAuthBox('twitter',authcallback);
+    });
+      
+  /////////////////////////////////////////   
+  var scene = sjs.Scene({w:$(window).width(), h:$(window).height(), autoPause: false});
   var sps = {
     lando: scene.Sprite("/images/sprites/lando.png"),
     luke: scene.Sprite("/images/sprites/luke.png")

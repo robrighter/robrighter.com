@@ -208,7 +208,90 @@ td { vertical-align: top; }
 
 body {
   background-color: #ccc;
+  background-image:url(/images/logo.png);
+  background-repeat:no-repeat;
+  background-attachment:fixed;
+  background-position:center;
 }
+
+#contactinfo{
+  overflow: hidden;
+  width: 260px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: -130px;
+  margin-top: 25px;
+  z-index: 999999999;
+  font-family: 'Squada One', cursive;
+  font-size: 18px;
+}
+
+#contactinfo ul {
+  list-style: none;
+  margin: 0px;
+  overflow: hidden;
+  padding: 0px;
+  width: 210px;
+  margin-left: 32px;
+}
+
+#contactinfo ul li {
+  float: left;
+  padding-right: 10px;
+}
+
+#contactinfo ul li a {
+  text-decoration: none;
+  color: rgb(136,130,130);
+}
+
+#contactinfo ul li span {
+  font-size: 10px;
+  color: #eee;
+}
+
+#contactinfo ul li a:hover {
+  color: #eee;
+}
+
+#controlbox {
+  position: fixed;
+  background-color: #aaa;
+  right: 0;
+  padding: 7px;
+  width: 450px;
+  overflow: hidden;
+  border-bottom: 1px solid #eee;
+  border-left: 1px solid rgb(136,130,130);
+  border-bottom-left-radius: 10px;
+  z-index: 999999999;
+}
+
+#controlbox .instructions {
+  font-size: 11px;
+  color: color: rgb(130,130,130);
+  float: left;
+  width: 280px;
+  padding: 5px;
+  text-align: right;
+}
+
+#controlbox .instructions a{
+  color: #eee;
+}
+
+#controlbox #oauthbutt {
+  width: 151px;
+  height: 23px;
+  background-image: url(/images/twitter-login-butt.png);
+  background-repeat: no-repeat;
+  border: none;
+  color: rgb(55,93,116);
+  text-indent: 9000px;
+  float: left;
+}
+
 
 
 

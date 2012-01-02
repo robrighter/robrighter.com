@@ -2,7 +2,9 @@
 var connect = require('connect')
     , express = require('express')
     , io = require('Socket.io')
+    , easyoauth = require('easy-oauth')
     , port = (process.env.PORT || 8081);
+    
 
 //Setup Express
 var server = express.createServer();
@@ -12,6 +14,7 @@ server.configure(function(){
     server.use(express.cookieParser());
     server.use(express.session({ secret: "shhhhhhhhh!"}));
     server.use(connect.static(__dirname + '/static'));
+    server.use(easyoauth(require('./keys_file')));
     server.use(server.router);
 });
 
