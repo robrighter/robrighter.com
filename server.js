@@ -5,6 +5,9 @@ var connect = require('connect')
     , easyoauth = require('easy-oauth')
     , port = (process.env.PORT || 8081);
     
+    
+var crypto = require('crypto');
+var keylookups = {};
 
 //Setup Express
 var server = express.createServer();
@@ -44,6 +47,8 @@ var io = io.listen(server);
 io.sockets.on('connection', function(socket){
   console.log('Client Connected');
   socket.on('move_character', function(data){
+    data.character = keylookups[data.requestkey];
+    delete data.requestkey; 
     socket.broadcast.emit('server_move_character',data);
     socket.emit('server_move_character',data);
   });
@@ -52,6 +57,32 @@ io.sockets.on('connection', function(socket){
   });
 });
 
+
+// Website functions /////////////////////////////////////
+var hashsalt = Math.random() + 'seedin' + Math.random();
+var characters = {
+  hubot: {
+    image: "/images/sprites/protocoldroid2.png",
+    location: {
+      x: 50,
+      y: 50
+    }
+  }
+}
+
+function createHash(tohash, callback){
+  crypto.pbkdf2(tohash,hashsalt, 1, 10, function(err, derivedkey){
+    keylookups[derivedkey] = tohash;
+    callback(derivedkey);
+  });
+}
+
+function notifyClientsAboutNewCharacter(handle){
+  //TODO: FIX THIS
+  console.log('GOT HERE!!!!!!!!!!!!!!!!!!!!!!!!!!');
+  io.sockets.emit('server_add_character', { handel: handle, details: characters[handle] });
+  //io.sockets.broadcast.emit('add_character', characters[handle]);
+}
 
 ///////////////////////////////////////////
 //              Routes                   //
@@ -62,14 +93,34 @@ io.sockets.on('connection', function(socket){
 server.get('/', function(req,res){
   res.render('index.jade', {
     locals : { 
-              title : 'Your Page Title'
+              title : 'Rob Righter, Javascript, Node.JS, IOS, Hubot and other such things.'
              ,description: 'Your Page Description'
-             ,author: 'Your Name'
+             ,author: 'Rob Righter'
              ,analyticssiteid: 'XXXXXXX' 
             }
   });
 });
 
+server.get('/ajax/characters', function(req,res){
+  res.send(characters);
+})
+
+server.post('/ajax/initiate-character', function(req,res){
+  //todo: CHECK THE AUTH AND MAKE SURE THEY ARE OAUTH WITH THIS TWITTER HANDLE
+  characters[req.body.handle] = {
+    image: req.body.image,
+    location: {
+      x: 100,
+      y: 100
+    }
+  };
+  console.log('GOT A NEW CHARACTER: ' + req.body.handle);
+  console.log(characters[req.body.handle]);
+  notifyClientsAboutNewCharacter(req.body.handle);
+  createHash(req.body.handle, function(hash){
+    res.send({ requestkey: hash });
+  });
+});
 
 //A Route for Creating a 500 Error (Useful to keep around)
 server.get('/500', function(req, res){
