@@ -47,10 +47,16 @@ var io = io.listen(server);
 io.sockets.on('connection', function(socket){
   console.log('Client Connected');
   socket.on('move_character', function(data){
-    data.character = keylookups[data.requestkey];
-    delete data.requestkey; 
-    socket.broadcast.emit('server_move_character',data);
-    socket.emit('server_move_character',data);
+    if(keylookups.hasOwnProperty(data.requestkey)){
+      var movedata = {
+        character: keylookups[data.requestkey],
+        xv: data.xv,
+        yv: data.yv,
+        direction: data.direction
+      }
+      socket.broadcast.emit('server_move_character',movedata);
+      socket.emit('server_move_character',movedata);
+    } 
   });
   socket.on('disconnect', function(){
     console.log('Client Disconnected.');
@@ -78,10 +84,7 @@ function createHash(tohash, callback){
 }
 
 function notifyClientsAboutNewCharacter(handle){
-  //TODO: FIX THIS
-  console.log('GOT HERE!!!!!!!!!!!!!!!!!!!!!!!!!!');
-  io.sockets.emit('server_add_character', { handel: handle, details: characters[handle] });
-  //io.sockets.broadcast.emit('add_character', characters[handle]);
+  io.sockets.emit('server_add_character', { handle: handle, details: characters[handle] });
 }
 
 ///////////////////////////////////////////

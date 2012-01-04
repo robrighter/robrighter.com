@@ -13,6 +13,7 @@ $(document).ready(function() {
   //setup the oauth button
   $('#oauthbutt').click(function(){
     openEasyOAuthBox('twitter',function(oauth){
+      //var oauth = {user: {username: 'robrighter'} };
       $.post("/ajax/initiate-character", { 
         handle: oauth.user.username,
         image: '/images/sprites/weddingguy02.png'
@@ -20,7 +21,6 @@ $(document).ready(function() {
         requestkey = data.requestkey;
       });
       setupTalkInterface(oauth.user.username);
-      
     });
   });
   
@@ -46,8 +46,6 @@ $(document).ready(function() {
   function setupSocket(){
     socket = io.connect();
     socket.on('server_move_character', function(data){
-     console.log(data);
-     console.log(sps);
      sps[data.character].xv = data.xv;
      sps[data.character].yv = data.yv;
      if(data.direction){
@@ -56,9 +54,7 @@ $(document).ready(function() {
     });
     
     socket.on('server_add_character', function(data){
-      console.log('GOT AN ADD CHARACTER!!!!!!!');
-      console.log(data);
-      addCharacter(data.character, data.details);
+      addCharacter(data.handle, data.details);
     });
   }
 
