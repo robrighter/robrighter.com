@@ -279,6 +279,7 @@ body {
 
 #controlbox .instructions a{
   color: #eee;
+  z-index: 999999999;
 }
 
 #controlbox #oauthbutt {
@@ -290,6 +291,32 @@ body {
   color: rgb(55,93,116);
   text-indent: 9000px;
   float: left;
+}
+
+#controlbox #talkbox {
+  border: 1px solid rgb(130,130,130);
+  width: 320px;
+  height: 15px;
+  font-size: 11px;
+  color: rgb(55,93,116);
+}
+
+#controlbox #saybutt {
+  font-size: 11px;
+  border: 1px solid rgb(130,130,130);
+  border-radius: 3px;
+  background-color: #dddddd;
+  height: 19px;
+  margin-left: 5px;
+}
+
+#controlbox #saybutt:hover {
+  background-color: #fff;
+}
+
+#controlbox .username {
+  font-size: 10px;
+  color: #444;
 }
 
 

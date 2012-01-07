@@ -6,14 +6,19 @@ $(document).ready(function() {
   var scene = sjs.Scene({w:$(window).width(), h:$(window).height(), autoPause: false});
   var sps = {};
   var input = sjs.Input(scene);
+  var keyPressed = function(name){
+    console.log('KEY PRESSED');
+    console.log(name);
+  }
+  window.inputer = input;
   var inmotion = false;
   var socket;
   var requestkey = '';
   
   //setup the oauth button
   $('#oauthbutt').click(function(){
-    openEasyOAuthBox('twitter',function(oauth){
-      //var oauth = {user: {username: 'robrighter'} };
+    //openEasyOAuthBox('twitter',function(oauth){
+      var oauth = {user: {username: 'robrighter'} };
       $.post("/ajax/initiate-character", { 
         handle: oauth.user.username,
         image: '/images/sprites/weddingguy02.png'
@@ -21,7 +26,7 @@ $(document).ready(function() {
         requestkey = data.requestkey;
       });
       setupTalkInterface(oauth.user.username);
-    });
+    //});
   });
   
   //load up the characters
@@ -127,8 +132,19 @@ $(document).ready(function() {
   
   function setupTalkInterface(user){
     $('#controlbox').slideUp('slow', function(){
-      $('#controlbox').html("<div class='username'>@"+user+"</div>"+"<input type='text' id='talkbox'><button id='#saybutt'>say it.</button>").slideDown('slow');
+      $('#controlbox').html("<form id='talkform'><span class='username'>@"+user+": </span>"+"<input type='text' id='talkbox'><button id='saybutt'>say it.</button></form>").slideDown('slow');
+      $('#talkform').submit(function(e){
+        e.preventDefault();
+        sendMessage($('#talkbox').val());
+        $('#talkbox').val('')
+        
+      });
     });
+  }
+  
+  function sendMessage(texttosend){
+    console.log('Need to send this:');
+    console.log(texttosend);
   }
 });
 
