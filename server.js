@@ -58,6 +58,19 @@ io.sockets.on('connection', function(socket){
       socket.emit('server_move_character',movedata);
     } 
   });
+  
+  socket.on('talk_character', function(data){
+    if(keylookups.hasOwnProperty(data.requestkey)){
+      //TODO: ADD STRIP TABS
+      var message = {
+        character: keylookups[data.requestkey],
+        message: data.message,
+      }
+      socket.broadcast.emit('server_talk_character',message);
+      socket.emit('server_talk_character',message);
+    } 
+  });
+  
   socket.on('disconnect', function(){
     console.log('Client Disconnected.');
   });

@@ -46,6 +46,7 @@ $(document).ready(function() {
     sps[handle].offset(0,0);
     sps[handle].move(chardict.location.x,chardict.location.y);
     sps[handle].update();
+    sps[handle].talkHistory = [];
   }
   
   function setupSocket(){
@@ -56,6 +57,11 @@ $(document).ready(function() {
      if(data.direction){
        spriteAnimateDirection(sps[data.character], data.direction);
      }
+    });
+    
+    socket.on('server_talk_character', function(data){
+     spriteSpeak(data.character, data.message);
+     
     });
     
     socket.on('server_add_character', function(data){
@@ -143,8 +149,24 @@ $(document).ready(function() {
   }
   
   function sendMessage(texttosend){
-    console.log('Need to send this:');
-    console.log(texttosend);
+    socket.emit('talk_character', {requestkey: requestkey, message: texttosend });
   }
+  
+  function spriteSpeak(sprite, message){
+    sps[sprite].talkHistory.push(message);
+    var formattedmessages = sps[sprite].talkHistory.join('<br>');
+    if($('#talk'+sprite).length === 0 ){
+      var html = "<div class='talkbubble' id='talk"+sprite+"'><div class='message'>"+formattedmessages+"</div></div>";
+      $('#talks').append(html); 
+    }
+    else{
+      $('#talk'+sprite+' .message').html(formattedmessages);
+    }
+    
+    $('#talk'+sprite).setStyle('left', '400px');
+    $('#talk'+sprite).setStyle('top', '400px');
+    console.log('CHARACTER: ' + sprite + " says: " + message);
+  }
+  
 });
 
