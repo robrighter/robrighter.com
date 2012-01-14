@@ -15,19 +15,46 @@ $(document).ready(function() {
   var socket;
   var requestkey = '';
   
+  var character_images = [
+  'chinese_m1.png',
+  'chiss1.png',
+  'darthvader.png',
+  'golbez.png',
+  'indianajones.png',
+  'japanese_f1.png',
+  'lando.png',
+  'mandalorian2.png',
+  'marionravenwood.png',
+  'pirate_m2.png',
+  'princessleia.png',
+  'rebelpilot.png',
+  'steampunk_m1.png',
+  'weddingguy02.png'
+  ]
+  
   //setup the oauth button
   $('#oauthbutt').click(function(){
     openEasyOAuthBox('twitter',function(oauth){
-      //var oauth = {user: {username: 'robrighter'} };
-      $.post("/ajax/initiate-character", { 
-        handle: oauth.user.username,
-        image: '/images/sprites/weddingguy02.png'
-      }, function(data){
-        requestkey = data.requestkey;
-      });
-      setupTalkInterface(oauth.user.username);
-    });
-  });
+      var username = oauth.user.username;
+      $('#controlbox').slideUp('slow', function(){
+        $('#controlbox').html(makeSpritePickers());
+        $('#controlbox').slideDown('slow');
+        $('.sprite-picker').click(function(){
+          //var oauth = {user: {username: 'robrighter'} };
+          var that = this;
+          var spriteimageurl = $(that).css('background-image').replace('url(','').replace(')','');
+          $.post("/ajax/initiate-character", { 
+            handle: username,
+            image: spriteimageurl,
+          }, function(data){
+            console.log(data);
+            requestkey = data.requestkey;
+            setupTalkInterface(username);
+          });//initiate character
+        }); //sprite picker click
+      }); //slide up callback
+    }); //Oauth box
+  }); //Oauth button click
   
   //load up the characters
   $.get('/ajax/characters', function(data) {
@@ -166,6 +193,14 @@ $(document).ready(function() {
     
     $('#talk'+sprite).css('margin-left', sps[sprite].x+'px').css('margin-top', sps[sprite].y+'px');
     console.log('CHARACTER: ' + sprite + " says: " + message);
+  }
+  
+  function makeSpritePickers(){
+    return "<div class='sprite-picker-box'><h2>Choose your Avatar</h2>" +
+     _.map(character_images, makeSpritePicker).join('') + "</div>"
+  }
+  function makeSpritePicker(image){
+    return "<div class='sprite-picker' style='background-image: url(/images/sprites/" + image + ")'></div>";
   }
   
 });

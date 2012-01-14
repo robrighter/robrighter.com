@@ -3,7 +3,7 @@ var connect = require('connect')
     , express = require('express')
     , io = require('Socket.io')
     , easyoauth = require('easy-oauth')
-    , port = (process.env.PORT || 8081);
+    , port = (process.env.PORT || 19606); //
     
     
 var crypto = require('crypto');
@@ -61,10 +61,10 @@ io.sockets.on('connection', function(socket){
   
   socket.on('talk_character', function(data){
     if(keylookups.hasOwnProperty(data.requestkey)){
-      //TODO: ADD STRIP TABS
+      //STRIP TAGs
       var message = {
         character: keylookups[data.requestkey],
-        message: data.message,
+        message: data.message.replace(/<(?:.|\n)*?>/gm, ''), //strip the tags
       }
       socket.broadcast.emit('server_talk_character',message);
       socket.emit('server_talk_character',message);
@@ -122,19 +122,27 @@ server.get('/ajax/characters', function(req,res){
 })
 
 server.post('/ajax/initiate-character', function(req,res){
-  //todo: CHECK THE AUTH AND MAKE SURE THEY ARE OAUTH WITH THIS TWITTER HANDLE
-  characters[req.body.handle] = {
-    image: req.body.image,
-    location: {
-      x: 100,
-      y: 100
+  req.authenticate(['oauth'], function(error, authenticated) { 
+    if( authenticated ){
+      console.log('Authenticated users');
+      characters[req.body.handle] = {
+        image: req.body.image,
+        location: {
+          x: 100,
+          y: 100
+        }
+      };
+      console.log('GOT A NEW CHARACTER: ' + req.body.handle);
+      console.log(characters[req.body.handle]);
+      notifyClientsAboutNewCharacter(req.body.handle);
+      createHash(req.body.handle, function(hash){
+        res.send({ requestkey: hash });
+      });
     }
-  };
-  console.log('GOT A NEW CHARACTER: ' + req.body.handle);
-  console.log(characters[req.body.handle]);
-  notifyClientsAboutNewCharacter(req.body.handle);
-  createHash(req.body.handle, function(hash){
-    res.send({ requestkey: hash });
+    else{
+      console.log('Not Authenticated user');
+      res.send({ error: 'Not authenticated'});
+    }
   });
 });
 

@@ -208,10 +208,10 @@ td { vertical-align: top; }
 
 body {
   background-color: #ccc;
-  background-image:url(/images/logo.png);
-  background-repeat:no-repeat;
-  background-attachment:fixed;
-  background-position:center;
+  background-image: url(/images/logo.png);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
 }
 
 #contactinfo{
@@ -333,6 +333,23 @@ body {
   border-radius: 3px;
   padding-left: 35px;
   min-height: 45px;
+}
+
+.sprite-picker-box {
+  overflow: hidden;
+}
+
+.sprite-picker-box h2 {
+  font-family: 'Squada One', cursive;
+  font-size: 18px;
+  color: rgb(136,130,130);
+}
+
+.sprite-picker {
+  width: 32px;
+  height: 48px;
+  cursor: pointer;
+  float: left;
 }
 
 
