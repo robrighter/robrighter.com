@@ -320,14 +320,14 @@ body {
 }
 
 #talks {
-  position: absolute;
 }
 
 #talks .talkbubble {
+  position: absolute;
   background-color: #bbbbbb;
   opacity: 0.9;
   font-size: 10px;
-  width: 300px;
+  width: 200px;
   padding: 7px;
   border: 1px solid #aaaaaa;
   border-radius: 3px;

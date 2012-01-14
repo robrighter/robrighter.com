@@ -17,8 +17,8 @@ $(document).ready(function() {
   
   //setup the oauth button
   $('#oauthbutt').click(function(){
-    //openEasyOAuthBox('twitter',function(oauth){
-      var oauth = {user: {username: 'robrighter'} };
+    openEasyOAuthBox('twitter',function(oauth){
+      //var oauth = {user: {username: 'robrighter'} };
       $.post("/ajax/initiate-character", { 
         handle: oauth.user.username,
         image: '/images/sprites/weddingguy02.png'
@@ -26,7 +26,7 @@ $(document).ready(function() {
         requestkey = data.requestkey;
       });
       setupTalkInterface(oauth.user.username);
-    //});
+    });
   });
   
   //load up the characters
@@ -57,6 +57,7 @@ $(document).ready(function() {
      if(data.direction){
        spriteAnimateDirection(sps[data.character], data.direction);
      }
+     $('#talk'+data.character).css('margin-left', sps[data.character].x+'px').css('margin-top', sps[data.character].y+'px');
     });
     
     socket.on('server_talk_character', function(data){
@@ -163,8 +164,7 @@ $(document).ready(function() {
       $('#talk'+sprite+' .message').html(formattedmessages);
     }
     
-    $('#talk'+sprite).setStyle('left', '400px');
-    $('#talk'+sprite).setStyle('top', '400px');
+    $('#talk'+sprite).css('margin-left', sps[sprite].x+'px').css('margin-top', sps[sprite].y+'px');
     console.log('CHARACTER: ' + sprite + " says: " + message);
   }
   
