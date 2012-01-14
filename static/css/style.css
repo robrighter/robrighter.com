@@ -352,6 +352,10 @@ body {
   float: left;
 }
 
+.sprite-picker:hover {
+  background-color: #ccc;
+}
+
 
 
 
