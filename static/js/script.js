@@ -2,7 +2,9 @@
 */
 
 $(document).ready(function() {
-  
+  //DISABLE ALL THIS FOR INITIAL LAUNCH
+  return;
+
   var scene = sjs.Scene({w:$(window).width(), h:$(window).height(), autoPause: false});
   var sps = {};
   var input = sjs.Input(scene);
