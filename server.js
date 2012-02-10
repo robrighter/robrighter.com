@@ -1,7 +1,7 @@
 //setup Dependencies
 var connect = require('connect')
     , express = require('express')
-    , io = require('Socket.io')
+    , io = require('socket.io')
     , easyoauth = require('easy-oauth')
     , port = (process.env.PORT || 19606); //
     
